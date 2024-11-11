@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:print_script/app/app_controller.dart';
 import 'package:print_script/app/consts/const_extensions_file.dart';
+import 'package:print_script/app/utils/file_extension_validate.dart';
 import 'package:print_script/app/utils/file_name_generator.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -40,8 +41,11 @@ class _HomePageState extends State<HomePage> {
               flex: 6,
               child: DropTarget(
                 onDragDone: (details) async {
-                  //TODO: filter media files
                   if (details.files.isNotEmpty) {
+                    final firstFileName = details.files.first.name;
+                    if (!FileExtensionValidate.check(fileName: firstFileName)) {
+                      return;
+                    }
                     final code = await details.files.first.readAsString();
                     Controller.codeController.setCode(code);
                   }
